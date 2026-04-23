@@ -11,7 +11,7 @@ def test_agent_triage_result_round_trip() -> None:
     r = AgentTriageResult(
         route="human_review",
         category="maintenance",
-        confidence=0.7,
+        confidence=70,
         reason="Possible emergency",
         review_recommended=True,
         review_triggers=["maintenance"],
@@ -26,6 +26,6 @@ def test_agent_triage_result_rejects_empty_route() -> None:
         AgentTriageResult(
             route="  ",
             category="x",
-            confidence=0.5,
+            confidence=50,
             reason="y",
         )

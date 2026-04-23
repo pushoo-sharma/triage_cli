@@ -150,6 +150,7 @@ def main(argv: list[str] | None = None) -> int:
         if total:
             assert summary is not None
             payload["summary"] = summary
+        out_path.parent.mkdir(parents=True, exist_ok=True)
         out_path.write_text(
             json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8"
         )

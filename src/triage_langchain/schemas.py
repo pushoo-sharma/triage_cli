@@ -12,7 +12,7 @@ class AgentTriageResult(BaseModel):
     category: str = Field(
         description="High-level category (e.g. leasing, maintenance, legal, payment)."
     )
-    confidence: float = Field(ge=0.0, le=1.0, description="Model confidence 0-1.")
+    confidence: int = Field(ge=0, le=100, description="Model confidence as a percentage (0-100).")
     reason: str = Field(description="Short justification for the routing decision.")
     review_recommended: bool = Field(
         default=False,

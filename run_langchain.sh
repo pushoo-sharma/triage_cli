@@ -7,5 +7,9 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
-python -m triage_langchain data/sample_messages.json -o langchain_output.json
-echo "Wrote langchain output to langchain_output.json"
+OUT_DIR="output/ai"
+OUT_FILE="$OUT_DIR/langchain_output.json"
+mkdir -p "$OUT_DIR"
+
+python -m triage_langchain data/sample_messages.json -o "$OUT_FILE"
+echo "Wrote langchain output to $OUT_FILE"

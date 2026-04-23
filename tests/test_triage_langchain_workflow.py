@@ -13,10 +13,19 @@ from triage_langchain import workflow  # noqa: E402
 def test_run_message_success() -> None:
     agent = MagicMock()
     agent.invoke.return_value = {
+        "messages": [
+            {
+                "usage_metadata": {
+                    "input_tokens": 12,
+                    "output_tokens": 5,
+                    "total_tokens": 17,
+                }
+            }
+        ],
         "structured_response": AgentTriageResult(
             route="auto_draft",
             category="leasing",
-            confidence=0.4,
+            confidence=40,
             reason="Routine inquiry",
             review_recommended=False,
         )
@@ -29,6 +38,11 @@ def test_run_message_success() -> None:
     assert row["error"] is None
     assert row["result"] is not None
     assert row["result"]["route"] == "auto_draft"
+    assert row["usage"] == {
+        "input_tokens": 12,
+        "output_tokens": 5,
+        "total_tokens": 17,
+    }
 
 
 def test_run_message_error_from_invoke() -> None:
@@ -38,3 +52,35 @@ def test_run_message_error_from_invoke() -> None:
     assert row["id"] == "x"
     assert row["error"] == "api down"
     assert row["result"] is None
+
+
+def test_run_message_stream_uses_last_values() -> None:
+    """Streaming path should read final state from the last ``values`` event."""
+    pytest.importorskip("rich", reason="streaming log path uses Rich")
+    agent = MagicMock()
+    result = AgentTriageResult(
+        route="auto_draft",
+        category="leasing",
+        confidence=40,
+        reason="Routine inquiry",
+        review_recommended=False,
+    )
+    agent.stream = MagicMock(
+        return_value=iter(
+            [
+                ("values", {"messages": []}),
+                ("values", {"structured_response": result}),
+            ]
+        )
+    )
+    row = workflow.run_message(
+        agent,
+        {"id": "msg_002", "body": "Hi"},
+        stream_logs=True,
+        log_console=MagicMock(),
+    )
+    assert row["id"] == "msg_002"
+    assert row["error"] is None
+    assert row["result"] is not None
+    assert row["result"]["route"] == "auto_draft"
+    agent.stream.assert_called_once()

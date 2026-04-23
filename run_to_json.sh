@@ -4,5 +4,9 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
-python -m triage.runner data/sample_messages.jsonl -o triage_output.json
-echo "Wrote triage output to triage_output.json"
+OUT_DIR="output/normal"
+OUT_FILE="$OUT_DIR/triage_output.json"
+mkdir -p "$OUT_DIR"
+
+python -m triage.runner data/sample_messages.jsonl -o "$OUT_FILE"
+echo "Wrote triage output to $OUT_FILE"
