@@ -64,6 +64,12 @@ def test_triage_writes_json_file_with_dash_o(tmp_path: Path):
     data = json.loads(out.read_text(encoding="utf-8"))
     assert "results" in data and isinstance(data["results"], list)
     assert len(data["results"]) > 0
+    first = data["results"][0]
+    assert "urgency_score" in first
+    assert isinstance(first["urgency_score"], int)
+    assert 0 <= first["urgency_score"] <= 100
+    assert "priority_bucket" in first
+    assert first["priority_bucket"] in {"low", "medium", "high", "critical"}
     assert "summary" in data
     assert "accuracy" in data["summary"]
     assert 0.0 <= data["summary"]["accuracy"] <= 1.0

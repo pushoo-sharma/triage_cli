@@ -14,6 +14,8 @@ class EvalRow:
     match: bool | None
     category: str
     confidence: float
+    urgency_score: int
+    priority_bucket: str
     has_label: bool
 
 
@@ -60,6 +62,8 @@ def evaluate_dataset(messages: list[dict[str, Any]]) -> EvalReport:
                 match=is_match,
                 category=r.category,
                 confidence=r.confidence,
+                urgency_score=r.urgency_score,
+                priority_bucket=r.priority_bucket,
                 has_label=has_label,
             )
         )

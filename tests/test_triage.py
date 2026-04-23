@@ -110,6 +110,8 @@ def test_maintenance_emergency_no_heat():
     )
     assert result.category == "maintenance_emergency"
     assert "maintenance_emergency" in result.warnings
+    assert result.urgency_score >= 85
+    assert result.priority_bucket == "critical"
 
 
 def test_sample_json_routes_match_expected():
@@ -117,3 +119,42 @@ def test_sample_json_routes_match_expected():
     for row in data:
         r = triage_message(row)
         assert r.route == row["expected_route"], (row["id"], r.route, row["expected_route"])
+
+
+def test_urgency_bucket_high_for_urgent_maintenance_without_crisis_term():
+    result = triage_message(
+        {
+            "sender": "tenant@example.com",
+            "subject": "Kitchen leak",
+            "body": "There is a leak under the sink and this is urgent. Please come today.",
+        }
+    )
+    assert result.category == "maintenance_emergency"
+    assert 65 <= result.urgency_score < 85
+    assert result.priority_bucket == "high"
+
+
+def test_urgency_bucket_medium_for_non_emergency_maintenance():
+    result = triage_message(
+        {
+            "sender": "tenant@example.com",
+            "subject": "Repair request",
+            "body": "The bathroom mold issue is urgent, can someone fix this soon?",
+        }
+    )
+    assert result.category == "maintenance"
+    assert 35 <= result.urgency_score < 65
+    assert result.priority_bucket == "medium"
+
+
+def test_urgency_bucket_low_for_general_question():
+    result = triage_message(
+        {
+            "sender": "prospect@example.com",
+            "subject": "Lease length",
+            "body": "Do you offer 12 month lease options?",
+        }
+    )
+    assert result.category == "leasing_general"
+    assert 0 <= result.urgency_score < 35
+    assert result.priority_bucket == "low"

@@ -98,3 +98,24 @@ We will score:
 - Do not ask for logins, credentials, Yardi access, tenant records, or production code.
 - Do not include secrets or real personal data in your submission.
 - If you need more data, create additional fake examples.
+
+
+
+
+Submit your completed work through the active Upwork workroom using whatever Upwork-supported delivery method is available, with:
+
+1. A short README note explaining what you changed and why.
+2. Tests and the exact command to run them.
+3. Logging/error-handling/validation notes.
+4. A short list of 3 product improvements you would build next.
+5. A clear statement of which files/functions you wrote personally vs adapted/generated with AI help.
+
+## What To Build
+
+Pick one meaningful improvement. Examples:
+
+- Improve classification accuracy and confidence scoring.
+- Add a safer human-review gate for legally sensitive, maintenance emergency, or money-related messages.
+- Add structured extraction, such as property, unit, urgency, callback number, and requested action.
+- Add a better response-drafting layer that never fabricates facts and explains why a human review is needed.
+- Add an evaluation/report command that shows classification accuracy on the sample dataset.
