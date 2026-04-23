@@ -101,7 +101,7 @@ The command writes a single JSON object to stdout or to `-o`:
       "result": {
         "route": "auto_draft",
         "category": "leasing_general",
-        "confidence": 0.5,
+        "confidence": 50,
         "reason": "...",
         "review_recommended": false,
         "review_triggers": []
@@ -118,6 +118,7 @@ The command writes a single JSON object to stdout or to `-o`:
 
 - `id` comes from the input message’s `id` when present.
 - `result` is the structured model output (`AgentTriageResult` in [`src/triage_langchain/schemas.py`](src/triage_langchain/schemas.py)) when the run succeeds.
+- `confidence` is an integer percentage from `0` to `100`.
 - `error` is set when the agent build failed (e.g. missing key) or a per-message call failed; other rows may still be present for partial success patterns depending on where the failure occurred (build fails before any message; per-message errors are in each row’s `error`).
 
 ## 6. Exit codes
