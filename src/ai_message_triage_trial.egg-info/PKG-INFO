@@ -5,3 +5,8 @@ Summary: Sanitized paid-trial exercise for AI message triage workflows
 Requires-Python: >=3.10
 Provides-Extra: dev
 Requires-Dist: pytest>=8; extra == "dev"
+Provides-Extra: langchain
+Requires-Dist: langchain>=0.3; extra == "langchain"
+Requires-Dist: langchain-google-genai; extra == "langchain"
+Requires-Dist: pydantic>=2; extra == "langchain"
+Requires-Dist: python-dotenv>=1; extra == "langchain"

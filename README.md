@@ -59,12 +59,16 @@ python -m triage.runner eval data/sample_messages.json
 ## What changed in this branch
 
 1. **Classification and confidence** — Rule-based signals (legal, fair housing, maintenance including crisis phrases, money) are scored and combined with a **priority order** (legal before fair housing before maintenance emergency before non-emergency maintenance before money, then general leasing). `confidence` is a **calibrated** value derived from cue strength instead of a single fixed number per branch.
-2. **Human-review gate** — `review_triggers` lists stable codes (`legal`, `fair_housing`, `maintenance_emergency`, `maintenance`, `payment`, `invalid_sender`). `warnings` mirror prior names where applicable for compatibility. Money-related terms include `rent`, `balance`, `late fee`, and similar. **Invalid senders** still fail closed with no outbound draft.
-3. **Structured extraction** — Each result includes `extraction` (`property_hint`, `unit`, `urgency`, `callback_number`, `requested_action`) from heuristics in `triage.extraction` (no invented street addresses).
-4. **Response drafting** — `triage.drafting` builds **auto** replies with a generic acknowledgment, optional **verbatim** topic line when a subject word also appears in the body, and a **safety footer**. **Human review** routes get a holding message that **does not state account facts**, explains why a person must review, and may append “detected for staff” lines only when extraction found something.
-5. **Evaluation** — `triage.evaluate.evaluate_dataset` and `python -m triage.runner eval <path>` print per-row match info and overall accuracy; **exit code 0** when all labeled rows match, **1** otherwise (useful for CI).
+2. **Reason, urgency, and queue priority** — Each `TriageResult` includes:
+  - `**reason`** — Short, human-readable explanation of the classification (e.g. cue counts for legal/money, or “Urgent or crisis-level maintenance…”). Shown in runner JSON as `reason`; when `route` is `human_review`, the same text is also emitted as `**human_review_reason**` (and `null` for non-review routes) for operator-facing views.
+  - `**urgency_score**` — Integer **0–100** composite: base level by message type, plus points for crisis/regular maintenance, maintenance time pressure, legal/fair-housing/money hit counts, time/severity/vulnerability language, and the extraction layer’s `urgency` (`emergency` / `urgent` / `normal` / `unknown`). System notifications use **0**; invalid sender gets a small bump.
+  - `**priority_bucket`** — Derived from `urgency_score`: `**critical**` (≥85), `**high**` (≥65), `**medium**` (≥35), `**low**` (scores under 35). Lets queues and dashboards sort or filter without re-implementing scoring.
+3. **Human-review gate** — `review_triggers` lists stable codes (`legal`, `fair_housing`, `maintenance_emergency`, `maintenance`, `payment`, `invalid_sender`). `warnings` mirror prior names where applicable for compatibility. Money-related terms include `rent`, `balance`, `late fee`, and similar. **Invalid senders** still fail closed with no outbound draft.
+4. **Structured extraction** — Each result includes `extraction` (`property_hint`, `unit`, `urgency`, `callback_number`, `requested_action`) from heuristics in `triage.extraction` (no invented street addresses). Extraction `urgency` feeds into `urgency_score` as above.
+5. **Response drafting** — `triage.drafting` builds **auto** replies with a generic acknowledgment, optional **verbatim** topic line when a subject word also appears in the body, and a **safety footer**. **Human review** routes get a holding message that **does not state account facts**, explains why a person must review, and may append “detected for staff” lines only when extraction found something.
+6. **Evaluation** — `triage.evaluate.evaluate_dataset` and `python -m triage.runner eval <path>` print per-row match info (including `urgency_score` and `priority_bucket`) and overall accuracy; **exit code 0** when all labeled rows match, **1** otherwise (useful for CI).
 
-**Tests:** `python -m pytest -q` (20 tests) including sample JSON gold routes, extraction, drafting, eval, and CLI.
+**Tests:** `python -m pytest -q` (24 tests) including sample JSON gold routes, extraction, drafting, urgency buckets, eval, and CLI.
 
 **Logging / validation:** `invalid_sender` is still logged with `message_id` when present. Triage is deterministic and uses only the message dict (no network).
 
@@ -74,11 +78,7 @@ python -m triage.runner eval data/sample_messages.json
 
 ## Evaluation Rubric
 
-
-
 We will score:
-
-
 
 - Code-reading and restraint: works with the existing code instead of rewriting everything.
 - Product judgment: chooses a useful improvement for a real operations workflow.
@@ -87,28 +87,6 @@ We will score:
 - Observability: useful logging or evaluation output.
 - Communication: concise setup notes and clear tradeoffs.
 - AI-agent fluency: uses AI tools effectively but verifies the result.
-
-
-
-## Security Rules
-
-
-
-- Use only the fake data in this project.
-- Do not ask for logins, credentials, Yardi access, tenant records, or production code.
-- Do not include secrets or real personal data in your submission.
-- If you need more data, create additional fake examples.
-
-
-
-
-Submit your completed work through the active Upwork workroom using whatever Upwork-supported delivery method is available, with:
-
-1. A short README note explaining what you changed and why.
-2. Tests and the exact command to run them.
-3. Logging/error-handling/validation notes.
-4. A short list of 3 product improvements you would build next.
-5. A clear statement of which files/functions you wrote personally vs adapted/generated with AI help.
 
 ## What To Build
 
@@ -119,3 +97,4 @@ Pick one meaningful improvement. Examples:
 - Add structured extraction, such as property, unit, urgency, callback number, and requested action.
 - Add a better response-drafting layer that never fabricates facts and explains why a human review is needed.
 - Add an evaluation/report command that shows classification accuracy on the sample dataset.
+
