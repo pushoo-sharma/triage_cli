@@ -32,7 +32,7 @@ def _load_env_from_dotfile() -> None:
         from dotenv import load_dotenv
     except ImportError:
         return
-    # CWD (e.g. project root when using run_langchain.sh)
+    # CWD (e.g. project root when using scripts/run_langchain.sh)
     load_dotenv(override=False)
     # Also: `src/triage_langchain/workflow.py` -> repo root / .env
     project_root = Path(__file__).resolve().parents[2]

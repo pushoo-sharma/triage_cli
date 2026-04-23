@@ -112,7 +112,7 @@ python -m triage_langchain data/sample_messages.json -o output/ai/langchain_outp
 Optional helper script (Git Bash/WSL/macOS/Linux):
 
 ```bash
-bash run_langchain.sh
+bash scripts/run_langchain.sh
 ```
 
 This writes to `output/ai/langchain_output.json`.
@@ -169,11 +169,11 @@ Why this changed:
 - **Personally written (human-authored):**
 Core project code and structure in local triage and evaluation flow, including `src/triage/runner.py`.
 - **Adapted/generated with AI help:**
-Newly added AI CLI tool (`src/triage_langchain/__main__.py`), LangChain integration, and agent integration logic (`src/triage_langchain/workflow.py`), plus documentation drafting/refinement in `Readme.md` and `langchain_readme.md`.
+Newly added AI CLI tool (`src/triage_langchain/__main__.py`), LangChain integration, and agent integration logic (`src/triage_langchain/workflow.py`), plus documentation drafting/refinement in `Readme.md` and `docs/langchain_readme.md`.
 - **This update specifically:**
 The `Next product improvements`, `New additions`, and this authorship statement were drafted with AI assistance and committed after human review/editing.
 
 ## Additional docs
 
-- Detailed AI mode guide: `langchain_readme.md`
+- Detailed AI mode guide: [`docs/langchain_readme.md`](docs/langchain_readme.md)
 

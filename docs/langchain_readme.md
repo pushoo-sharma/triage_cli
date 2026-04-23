@@ -1,6 +1,6 @@
 # LangChain message triage (`triage_langchain`)
 
-This document describes the **optional** LLM-based workflow in [`src/triage_langchain/`](src/triage_langchain/). It is **separate** from the rule-based `python -m triage.runner` pipeline: same style of input files (JSON array or JSONL), but classification is done by a Google Gemini model via LangChain, not by `triage.core`.
+This document describes the **optional** LLM-based workflow in [`src/triage_langchain/`](../src/triage_langchain/). It is **separate** from the rule-based `python -m triage.runner` pipeline: same style of input files (JSON array or JSONL), but classification is done by a Google Gemini model via LangChain, not by `triage.core`.
 
 ## Prerequisites
 
@@ -36,7 +36,7 @@ The `langchain` extra installs: `langchain`, `langchain-google-genai`, `pydantic
    - `GOOGLE_API_KEY=...`
    - or `GEMINI_API_KEY=...`
 
-3. Keep `.env` out of version control (it is listed in [`.gitignore`](.gitignore)).
+3. Keep `.env` out of version control (it is listed in [`.gitignore`](../.gitignore)).
 
 The app loads environment variables from:
 
@@ -69,7 +69,7 @@ python -m triage_langchain data/sample_messages.jsonl -o langchain_output.json
 **Helper script (Git Bash / WSL / macOS / Linux)**
 
 ```bash
-bash run_langchain.sh
+bash scripts/run_langchain.sh
 ```
 
 This `cd`s to the repo root and runs the sample file to `langchain_output.json`.
@@ -134,7 +134,7 @@ The command writes a single JSON object to stdout or to `-o`:
   - `input`: the original input message object
   - `output`: the triage outcome payload for that input
 - `output.id` comes from the input message’s `id` when present.
-- `output.result` is the structured model output (`AgentTriageResult` in [`src/triage_langchain/schemas.py`](src/triage_langchain/schemas.py)) when the run succeeds.
+- `output.result` is the structured model output (`AgentTriageResult` in [`src/triage_langchain/schemas.py`](../src/triage_langchain/schemas.py)) when the run succeeds.
 - `confidence` is an integer percentage from `0` to `100`.
 - `output.error` is set when a per-message call fails; other rows may still succeed.
 
@@ -167,10 +167,10 @@ Schema and workflow tests are skipped if `pydantic` or `langchain` are not insta
 
 | Path | Role |
 |------|------|
-| [`src/triage_langchain/workflow.py`](src/triage_langchain/workflow.py) | Model id, dotenv load, `create_agent` + `AgentTriageResult` |
-| [`src/triage_langchain/__main__.py`](src/triage_langchain/__main__.py) | CLI |
-| [`src/triage_langchain/io.py`](src/triage_langchain/io.py) | JSON array or JSONL loader (mirrors triage behavior, no import from `triage`) |
-| [`run_langchain.sh`](run_langchain.sh) | Optional bash wrapper |
-| [`.env.example`](.env.example) | Template for `GOOGLE_API_KEY` and optional `TRIAGE_LANGCHAIN_MODEL` |
+| [`src/triage_langchain/workflow.py`](../src/triage_langchain/workflow.py) | Model id, dotenv load, `create_agent` + `AgentTriageResult` |
+| [`src/triage_langchain/__main__.py`](../src/triage_langchain/__main__.py) | CLI |
+| [`src/triage_langchain/io.py`](../src/triage_langchain/io.py) | JSON array or JSONL loader (mirrors triage behavior, no import from `triage`) |
+| [`scripts/run_langchain.sh`](../scripts/run_langchain.sh) | Optional bash wrapper |
+| [`.env.example`](../.env.example) | Template for `GOOGLE_API_KEY` and optional `TRIAGE_LANGCHAIN_MODEL` |
 
-The top-level [Readme.md](Readme.md) describes the main trial and the rule-based triage commands; this file is the add-on for the LangChain path.
+The top-level [README.md](../README.md) describes the main trial and the rule-based triage commands; this file is the add-on for the LangChain path.

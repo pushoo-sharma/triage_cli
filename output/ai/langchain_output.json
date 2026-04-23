@@ -15,14 +15,14 @@
           "route": "auto_draft",
           "category": "leasing",
           "confidence": 95,
-          "reason": "Standard leasing inquiry regarding apartment availability and scheduling a tour.",
+          "reason": "This is a routine leasing inquiry asking about availability and scheduling a tour.",
           "review_recommended": false,
           "review_triggers": []
         },
         "usage": {
           "input_tokens": 181,
-          "output_tokens": 43,
-          "total_tokens": 224
+          "output_tokens": 58,
+          "total_tokens": 239
         }
       }
     },
@@ -41,7 +41,7 @@
           "route": "human_review",
           "category": "maintenance",
           "confidence": 100,
-          "reason": "The message describes an active water leak, which constitutes a maintenance emergency requiring immediate staff intervention.",
+          "reason": "The message describes a maintenance issue involving a water leak, which is potentially an emergency.",
           "review_recommended": true,
           "review_triggers": [
             "maintenance_emergency"
@@ -49,8 +49,8 @@
         },
         "usage": {
           "input_tokens": 179,
-          "output_tokens": 82,
-          "total_tokens": 261
+          "output_tokens": 81,
+          "total_tokens": 260
         }
       }
     },
@@ -69,7 +69,7 @@
           "route": "human_review",
           "category": "leasing",
           "confidence": 100,
-          "reason": "Inquiries regarding fair housing and voucher acceptance require human oversight to ensure compliance with local regulations and internal policies.",
+          "reason": "Questions regarding housing vouchers and Section 8 involve fair housing regulations and property policy which require staff oversight.",
           "review_recommended": true,
           "review_triggers": [
             "fair_housing"
@@ -77,8 +77,8 @@
         },
         "usage": {
           "input_tokens": 178,
-          "output_tokens": 85,
-          "total_tokens": 263
+          "output_tokens": 63,
+          "total_tokens": 241
         }
       }
     },
@@ -97,16 +97,16 @@
           "route": "human_review",
           "category": "payment",
           "confidence": 100,
-          "reason": "This is a payment inquiry from a vendor, which requires staff confirmation of invoice status and payment processing.",
+          "reason": "The message concerns an outstanding payment/invoice, which requires staff verification before responding.",
           "review_recommended": true,
           "review_triggers": [
-            "money_payment_dispute"
+            "payment"
           ]
         },
         "usage": {
           "input_tokens": 183,
-          "output_tokens": 87,
-          "total_tokens": 270
+          "output_tokens": 78,
+          "total_tokens": 261
         }
       }
     },
@@ -125,14 +125,14 @@
           "route": "auto_draft",
           "category": "leasing",
           "confidence": 95,
-          "reason": "The message is a routine follow-up confirming application submission and does not require manual intervention.",
+          "reason": "The message is a standard follow-up from a prospect indicating they have completed an application and are awaiting next steps.",
           "review_recommended": false,
           "review_triggers": []
         },
         "usage": {
           "input_tokens": 172,
-          "output_tokens": 57,
-          "total_tokens": 229
+          "output_tokens": 55,
+          "total_tokens": 227
         }
       }
     },
@@ -151,17 +151,18 @@
           "route": "human_review",
           "category": "legal",
           "confidence": 100,
-          "reason": "The message explicitly mentions an attorney, legal action, and a habitability issue (mold) that could lead to litigation.",
+          "reason": "The message mentions an attorney and a threat of litigation regarding a habitability issue.",
           "review_recommended": true,
           "review_triggers": [
-            "legal_action",
+            "legal_matter",
+            "threat_of_litigation",
             "maintenance_emergency"
           ]
         },
         "usage": {
           "input_tokens": 181,
-          "output_tokens": 95,
-          "total_tokens": 276
+          "output_tokens": 97,
+          "total_tokens": 278
         }
       }
     },
@@ -180,14 +181,14 @@
           "route": "auto_draft",
           "category": "system_report",
           "confidence": 95,
-          "reason": "The message is an automated system report for internal property management and does not require a customer-facing response.",
+          "reason": "The message is a system-generated report sent to an automated mailbox, which does not require human intervention.",
           "review_recommended": false,
           "review_triggers": []
         },
         "usage": {
           "input_tokens": 168,
-          "output_tokens": 67,
-          "total_tokens": 235
+          "output_tokens": 76,
+          "total_tokens": 244
         }
       }
     },
@@ -205,8 +206,8 @@
         "result": {
           "route": "human_review",
           "category": "leasing",
-          "confidence": 100,
-          "reason": "Inquiries regarding emotional support animals involve fair housing regulations and legal documentation requirements, which require human staff assessment.",
+          "confidence": 95,
+          "reason": "Inquiries regarding emotional support animals involve fair housing regulations and require adherence to specific legal documentation standards.",
           "review_recommended": true,
           "review_triggers": [
             "fair_housing"
@@ -214,8 +215,8 @@
         },
         "usage": {
           "input_tokens": 172,
-          "output_tokens": 85,
-          "total_tokens": 257
+          "output_tokens": 82,
+          "total_tokens": 254
         }
       }
     },
@@ -234,14 +235,14 @@
           "route": "auto_draft",
           "category": "leasing",
           "confidence": 95,
-          "reason": "This is a routine leasing inquiry regarding building amenities.",
+          "reason": "This is a routine leasing inquiry regarding standard apartment amenities.",
           "review_recommended": false,
           "review_triggers": []
         },
         "usage": {
           "input_tokens": 174,
-          "output_tokens": 63,
-          "total_tokens": 237
+          "output_tokens": 55,
+          "total_tokens": 229
         }
       }
     },
@@ -260,7 +261,7 @@
           "route": "human_review",
           "category": "maintenance",
           "confidence": 100,
-          "reason": "The report of no heat in a unit during cold weather constitutes a maintenance emergency requiring immediate staff intervention.",
+          "reason": "The message describes a maintenance emergency (lack of heat in cold weather), which requires immediate attention from management.",
           "review_recommended": true,
           "review_triggers": [
             "maintenance_emergency"
@@ -268,8 +269,8 @@
         },
         "usage": {
           "input_tokens": 176,
-          "output_tokens": 84,
-          "total_tokens": 260
+          "output_tokens": 85,
+          "total_tokens": 261
         }
       }
     }
