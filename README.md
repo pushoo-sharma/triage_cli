@@ -224,11 +224,19 @@ Why this changed:
 ## Authorship and AI assistance statement
 
 - **Personally written (human-authored):**
-Core project code and structure in local triage and evaluation flow, including `src/triage/runner.py`.
+  - Core project code and structure in the local triage and evaluation flow.
+  - The rule-based pipeline and CLI surface in `src/triage/runner.py` (and related `src/triage` modules that support it).
+
 - **Adapted/generated with AI help:**
-Newly added AI CLI tool (`src/triage_langchain/__main__.py`), LangChain integration, and agent integration logic (`src/triage_langchain/workflow.py`), plus documentation drafting/refinement in `Readme.md` and `docs/langchain_readme.md`.
+  - **AI mode:** the `python -m triage_langchain` entrypoint (`src/triage_langchain/__main__.py`), LangChain wiring, and agent behavior in `src/triage_langchain/workflow.py`.
+  - **CLI and shell UX:** helper scripts in `scripts/` (for example `run.sh`, `run_langchain.sh`, `run_tests.sh`, and shared `scripts/_ui.sh`), the root one-step `install.sh`, and the interactive `triage-menu.sh` launcher (optional Charm `gum` with a bash fallback) so common work is a menu choice instead of a long command line.
+  - **Documentation:** drafting and refinement in `README.md` and `docs/langchain_readme.md`.
+
 - **This update specifically:**
-The `Next product improvements`, `New additions`, and this authorship statement were drafted with AI assistance and committed after human review/editing.
+  - The `Next product improvements` and `New additions` sections in this document.
+  - This authorship statement, including the CLI, menu, and install story.
+  - Other README changes tied to setup, shell scripts, and navigation (for example the [Shell scripts](#shell-scripts) table).
+  - All of the above were produced with AI assistance, then reviewed and edited by a human before commit.
 
 ## Additional docs
 
