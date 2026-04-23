@@ -21,6 +21,30 @@ It supports two run modes:
 
 ## Setup
 
+### Automated install (recommended)
+
+From repo root, using Git Bash, WSL, macOS, or Linux:
+
+```bash
+bash install.sh
+```
+
+This script:
+
+- creates `.venv` if it does not exist
+- upgrades `pip` / `setuptools` / `wheel`, then runs `pip install -e ".[dev,langchain]"`
+- copies `.env.example` to `.env` when `.env` is missing (edit `.env` for AI mode; see [Environment variables](#environment-variables-env))
+
+Venv layout differs by OS: on Windows, activation is `source .venv/Scripts/activate` in Git Bash; on Unix, `source .venv/bin/activate`. The script detects both and prints the right `source` line when it finishes.
+
+Override the venv location:
+
+```bash
+VENV_DIR=/path/to/venv bash install.sh
+```
+
+### Manual setup
+
 From repo root:
 
 ```bash
@@ -54,18 +78,18 @@ pip install -e ".[dev,langchain]"
 
 Environment setup is only required for AI mode.
 
-1. Copy the example file:
+1. If you do not already have a `.env` file, create one. If you use [`install.sh`](#automated-install-recommended), a missing `.env` is created from `.env.example` automatically. Otherwise:
 
 ```bash
 cp .env.example .env
 ```
 
-1. Set one of:
+2. In `.env` (or your environment), set one of:
 
 - `GOOGLE_API_KEY=...`
 - or `GEMINI_API_KEY=...`
 
-1. Optional model override:
+3. Optional: model override in `.env` or the shell:
 
 - `TRIAGE_LANGCHAIN_MODEL=google_genai:gemini-3.1-flash-lite-preview`
 
@@ -135,6 +159,7 @@ Tips:
 
 - For local-only development, `pip install -e ".[dev]"` is sufficient.
 - For LangChain-related tests, install `.[langchain]` (or `.[dev,langchain]`) so those tests do not get skipped.
+- `bash install.sh` installs `[dev,langchain]` in one step (see [Setup](#setup)).
 
 ## Project entrypoints
 
