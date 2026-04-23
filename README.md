@@ -2,6 +2,24 @@
 
 Small Python app for triaging property-management inbound messages.
 
+## Interactive menu (`triage-menu.sh`)
+
+The usual starting point in a shell is the **interactive launcher** at the repo root. After [setup](#setup) (venv activated and dependencies installed), run:
+
+```bash
+bash triage-menu.sh
+```
+
+**Optional UI:** If **[Charm `gum`](https://github.com/charmbracelet/gum)** is installed, the menu uses styled prompts. On Windows, `winget install charmbracelet.gum` is enough; the script also looks in common WinGet install paths if `gum` is not on `PATH` yet. On macOS use `brew install gum`; on Debian/Ubuntu, `sudo apt install gum`.
+
+**No `gum`:** The same actions are available through a simple numeric **bash** menu (no extra tools).
+
+**Actions** (roughly): run local (rules) triage to `output/normal/triage_output.json`, run AI (LangChain) triage to `output/ai/langchain_output.json`, run the full test suite, evaluate routes against `data/sample_messages.json`, open the `output/` folder in the system file manager (Explorer / Finder / `xdg-open`), or quit.
+
+For a short description of every shell script, including the ones the menu calls, see [Shell scripts](#shell-scripts).
+
+## Overview
+
 It supports two run modes:
 
 - `Local (rule-based)`: deterministic, no network/API key required, entrypoint `python -m triage.runner`
@@ -166,6 +184,20 @@ Tips:
 - Local runner: `src/triage/runner.py`
 - AI runner: `src/triage_langchain/__main__.py`
 - AI workflow + env loading: `src/triage_langchain/workflow.py`
+
+## Shell scripts
+
+Bash helpers for Git Bash, WSL, macOS, and Linux. `triage-menu.sh` is the interactive front end; the others are run directly or from that menu.
+
+| Script | Purpose |
+| --- | --- |
+| [`triage-menu.sh`](triage-menu.sh) | Interactive launcher: optional `gum` UI or fallback bash menu; runs local/AI triage, tests, eval, or opens `output/`. Stays in a loop until you quit. |
+| [`install.sh`](install.sh) | One-shot setup: creates `.venv`, upgrades pip tooling, `pip install -e ".[dev,langchain]"`, copies `.env` from `.env.example` if missing. See [Automated install](#automated-install-recommended). |
+| [`scripts/run.sh`](scripts/run.sh) | **Local (rules) triage:** `python -m triage.runner` on `data/sample_messages.jsonl`, writes `output/normal/triage_output.json`. |
+| [`scripts/run_to_json.sh`](scripts/run_to_json.sh) | Same command and output as `run.sh` (local triage to `output/normal/triage_output.json` from `data/sample_messages.jsonl`). Use whichever name you prefer. |
+| [`scripts/run_langchain.sh`](scripts/run_langchain.sh) | **AI triage:** sources [`scripts/_ui.sh`](scripts/_ui.sh), shows a small banner and API-key hint, then `python -m triage_langchain` on `data/sample_messages.json` → `output/ai/langchain_output.json`. |
+| [`scripts/run_tests.sh`](scripts/run_tests.sh) | Runs `python -m pytest -v` from the repo root with simple timestamps in the log. |
+| [`scripts/_ui.sh`](scripts/_ui.sh) | **Not executed on its own.** Sourced by scripts that need shared terminal UI helpers (`ui_banner`, `ui_kv`, `ui_run`, etc.), with `gum` or plain ANSI. |
 
 ## Output format update
 
