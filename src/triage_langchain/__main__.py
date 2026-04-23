@@ -53,6 +53,9 @@ def _parse_args(
 
 
 def _usage_from_row(row: dict[str, Any]) -> dict[str, int] | None:
+    maybe_wrapped = row.get("output")
+    if isinstance(maybe_wrapped, dict):
+        row = maybe_wrapped
     usage = row.get("usage")
     if not isinstance(usage, dict):
         return None
@@ -169,7 +172,8 @@ def main(argv: list[str] | None = None) -> int:
             stream_logs=use_stream,
             log_console=log if use_stream else None,
         )
-        results.append(row)
+        wrapped_row = {"input": msg, "output": row}
+        results.append(wrapped_row)
         if use_stream and log is not None:
             if row.get("error"):
                 log.print(f"[bold red]x Failed:[/bold red] {row['error']}")

@@ -96,30 +96,47 @@ The command writes a single JSON object to stdout or to `-o`:
 {
   "results": [
     {
-      "id": "msg_001",
-      "error": null,
-      "result": {
-        "route": "auto_draft",
-        "category": "leasing_general",
-        "confidence": 50,
-        "reason": "...",
-        "review_recommended": false,
-        "review_triggers": []
+      "input": {
+        "id": "msg_001",
+        "sender": "resident",
+        "subject": "Tour",
+        "body": "Can I schedule a tour?"
+      },
+      "output": {
+        "id": "msg_001",
+        "error": null,
+        "result": {
+          "route": "auto_draft",
+          "category": "leasing_general",
+          "confidence": 50,
+          "reason": "...",
+          "review_recommended": false,
+          "review_triggers": []
+        }
       }
     },
     {
-      "id": "msg_002",
-      "error": "…",
-      "result": null
+      "input": {
+        "id": "msg_002",
+        "body": "..."
+      },
+      "output": {
+        "id": "msg_002",
+        "error": "…",
+        "result": null
+      }
     }
   ]
 }
 ```
 
-- `id` comes from the input message’s `id` when present.
-- `result` is the structured model output (`AgentTriageResult` in [`src/triage_langchain/schemas.py`](src/triage_langchain/schemas.py)) when the run succeeds.
+- Each `results` item now has:
+  - `input`: the original input message object
+  - `output`: the triage outcome payload for that input
+- `output.id` comes from the input message’s `id` when present.
+- `output.result` is the structured model output (`AgentTriageResult` in [`src/triage_langchain/schemas.py`](src/triage_langchain/schemas.py)) when the run succeeds.
 - `confidence` is an integer percentage from `0` to `100`.
-- `error` is set when the agent build failed (e.g. missing key) or a per-message call failed; other rows may still be present for partial success patterns depending on where the failure occurred (build fails before any message; per-message errors are in each row’s `error`).
+- `output.error` is set when a per-message call fails; other rows may still succeed.
 
 ## 6. Exit codes
 

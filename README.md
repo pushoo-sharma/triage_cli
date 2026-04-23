@@ -7,6 +7,12 @@ It supports two run modes:
 - `Local (rule-based)`: deterministic, no network/API key required, entrypoint `python -m triage.runner`
 - `AI (LangChain + Gemini)`: model-based triage using Google Gemini, entrypoint `python -m triage_langchain`
 
+## New additions
+
+- **New AI CLI tool:** Added AI triage CLI entrypoint at `python -m triage_langchain` for model-based routing from the command line.
+- **LangChain integration:** Added LangChain-based workflow integration for prompt-driven triage and structured model outputs.
+- **Agent integration:** Added agent orchestration in the AI pipeline for end-to-end message analysis and route decision generation.
+
 ## Prerequisites
 
 - Python `3.10+`
@@ -54,12 +60,12 @@ Environment setup is only required for AI mode.
 cp .env.example .env
 ```
 
-2. Set one of:
+1. Set one of:
 
 - `GOOGLE_API_KEY=...`
 - or `GEMINI_API_KEY=...`
 
-3. Optional model override:
+1. Optional model override:
 
 - `TRIAGE_LANGCHAIN_MODEL=google_genai:gemini-3.1-flash-lite-preview`
 
@@ -135,6 +141,37 @@ Tips:
 - Local runner: `src/triage/runner.py`
 - AI runner: `src/triage_langchain/__main__.py`
 - AI workflow + env loading: `src/triage_langchain/workflow.py`
+
+## Output format update
+
+Compared with `old_output.json`, we updated output shape for both current pipelines:
+
+- `output/normal/triage_output.json` now returns a top-level `results` array with both original `input` and normalized `output`, plus a `summary` block for evaluation metrics.
+- `output/ai/langchain_output.json` follows the same `results` structure for consistency, and adds AI-specific details like `usage` token counts and richer `result` reasoning fields.
+
+Why this changed:
+
+- A consistent schema across normal and AI modes makes downstream parsing, debugging, and comparisons much easier.
+- Keeping both `input` and `output` together improves traceability for audits and triage reviews.
+- Adding explicit metrics/metadata (`summary`, `usage`, triggers/reasons) helps explain routing decisions and monitor model cost/performance.
+
+## Next product improvements
+
+1. **Human-in-the-loop review queue**
+  Add a confidence score and automatic escalation for borderline cases, so low-confidence messages are flagged for manual review before final routing.
+2. **Active learning feedback loop**
+  Capture reviewer corrections (`predicted_route` vs. final route) and feed them back into regular prompt/rules updates and regression tests to improve accuracy over time.
+3. **Operations dashboard for quality + cost**
+  Introduce a simple dashboard/report for route distribution, mismatch trends, and AI token usage to track triage quality and control spend as volume grows.
+
+## Authorship and AI assistance statement
+
+- **Personally written (human-authored):**
+Core project code and structure in local triage and evaluation flow, including `src/triage/runner.py`.
+- **Adapted/generated with AI help:**
+Newly added AI CLI tool (`src/triage_langchain/__main__.py`), LangChain integration, and agent integration logic (`src/triage_langchain/workflow.py`), plus documentation drafting/refinement in `Readme.md` and `langchain_readme.md`.
+- **This update specifically:**
+The `Next product improvements`, `New additions`, and this authorship statement were drafted with AI assistance and committed after human review/editing.
 
 ## Additional docs
 

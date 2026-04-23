@@ -128,9 +128,10 @@ def main(argv: list[str] | None = None) -> int:
             "review_triggers": result.review_triggers,
             "warnings": result.warnings,
         }
-        results.append(row)
+        wrapped_row = {"input": message, "output": row}
+        results.append(wrapped_row)
         if out_path is None:
-            print(json.dumps(row, sort_keys=True))
+            print(json.dumps(wrapped_row, sort_keys=True))
 
     if total:
         acc = (correct / labeled) if labeled else 0.0
