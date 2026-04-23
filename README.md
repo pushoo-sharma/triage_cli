@@ -1,100 +1,142 @@
-# AI Message Triage Paid Trial
+# AI Message Triage
 
-This is a paid trial for an ongoing AI automation role. The project is intentionally small and sanitized. It is meant to test how you read existing code, improve a partially built workflow, add safety, and propose useful product ideas without receiving overly detailed instructions.
+Small Python app for triaging property-management inbound messages.
 
-## Time Box
+It supports two run modes:
 
-- Maximum billable time: 4 hours unless approved in writing first.
-- Do not start work until the Upwork contract is active.
-- Use your own paid AI/coding-agent tooling. Do not request Tri Star credentials, API keys, production data, or account access.
+- `Local (rule-based)`: deterministic, no network/API key required, entrypoint `python -m triage.runner`
+- `AI (LangChain + Gemini)`: model-based triage using Google Gemini, entrypoint `python -m triage_langchain`
 
-## Goal
+## Prerequisites
 
-Improve this small AI-style inbound message triage workflow.
+- Python `3.10+`
+- `pip`
+- Optional for AI mode: Google Gemini API key
 
-The current workflow:
+## Setup
 
-- classifies inbound property-management messages
-- drafts a basic response
-- routes risky messages to human review
-- logs basic processing details
-
-It is intentionally underbuilt. Your job is to make one focused, high-value improvement and prove it works.
-
-## Required Deliverable
-
-Submit your completed work through the active Upwork workroom using whatever Upwork-supported delivery method is available, with:
-
-1. A short README note explaining what you changed and why.
-2. Tests and the exact command to run them.
-3. Logging/error-handling/validation notes.
-4. A short list of 3 product improvements you would build next.
-5. A clear statement of which files/functions you wrote personally vs adapted/generated with AI help.
-
-## What To Build
-
-Pick one meaningful improvement. Examples:
-
-- Improve classification accuracy and confidence scoring.
-- Add a safer human-review gate for legally sensitive, maintenance emergency, or money-related messages.
-- Add structured extraction, such as property, unit, urgency, callback number, and requested action.
-- Add a better response-drafting layer that never fabricates facts and explains why a human review is needed.
-- Add an evaluation/report command that shows classification accuracy on the sample dataset.
-
-Do not build a giant system. A small, well-tested improvement with good judgment beats a large fragile rewrite.
-
-## Baseline Commands
+From repo root:
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate  # Windows: .venv\Scripts\activate
+python -m venv .venv
+# Windows (PowerShell): .venv\Scripts\Activate.ps1
+# Windows (cmd): .venv\Scripts\activate
+# macOS/Linux/Git Bash: source .venv/bin/activate
+```
+
+### Install dependencies
+
+Install base + test tooling (enough for local mode and tests):
+
+```bash
 pip install -e ".[dev]"
-python -m pytest -q
-# Run triage on the sample set (JSON array or JSONL; both work)
+```
+
+Install AI mode extras:
+
+```bash
+pip install -e ".[langchain]"
+```
+
+Install everything at once:
+
+```bash
+pip install -e ".[dev,langchain]"
+```
+
+## Environment variables (`.env`)
+
+Environment setup is only required for AI mode.
+
+1. Copy the example file:
+
+```bash
+cp .env.example .env
+```
+
+2. Set one of:
+
+- `GOOGLE_API_KEY=...`
+- or `GEMINI_API_KEY=...`
+
+3. Optional model override:
+
+- `TRIAGE_LANGCHAIN_MODEL=google_genai:gemini-3.1-flash-lite-preview`
+
+Notes:
+
+- `.env` is gitignored.
+- Variables already present in your shell are not overridden by `.env`.
+
+## Run the app
+
+### 1) Local mode (rule-based, no API key)
+
+Run against sample data (JSON array or JSONL):
+
+```bash
 python -m triage.runner data/sample_messages.json
-# Report route accuracy vs. `expected_route` in the file (exit 1 if any labeled row mismatches)
+```
+
+Write output to file:
+
+```bash
+python -m triage.runner data/sample_messages.json -o output/local/triage_output.json
+```
+
+Evaluate against `expected_route` labels:
+
+```bash
 python -m triage.runner eval data/sample_messages.json
 ```
 
-## What changed in this branch
+Evaluation exits with:
 
-1. **Classification and confidence** — Rule-based signals (legal, fair housing, maintenance including crisis phrases, money) are scored and combined with a **priority order** (legal before fair housing before maintenance emergency before non-emergency maintenance before money, then general leasing). `confidence` is a **calibrated** value derived from cue strength instead of a single fixed number per branch.
-2. **Reason, urgency, and queue priority** — Each `TriageResult` includes:
-  - `**reason`** — Short, human-readable explanation of the classification (e.g. cue counts for legal/money, or “Urgent or crisis-level maintenance…”). Shown in runner JSON as `reason`; when `route` is `human_review`, the same text is also emitted as `**human_review_reason**` (and `null` for non-review routes) for operator-facing views.
-  - `**urgency_score**` — Integer **0–100** composite: base level by message type, plus points for crisis/regular maintenance, maintenance time pressure, legal/fair-housing/money hit counts, time/severity/vulnerability language, and the extraction layer’s `urgency` (`emergency` / `urgent` / `normal` / `unknown`). System notifications use **0**; invalid sender gets a small bump.
-  - `**priority_bucket`** — Derived from `urgency_score`: `**critical**` (≥85), `**high**` (≥65), `**medium**` (≥35), `**low**` (scores under 35). Lets queues and dashboards sort or filter without re-implementing scoring.
-3. **Human-review gate** — `review_triggers` lists stable codes (`legal`, `fair_housing`, `maintenance_emergency`, `maintenance`, `payment`, `invalid_sender`). `warnings` mirror prior names where applicable for compatibility. Money-related terms include `rent`, `balance`, `late fee`, and similar. **Invalid senders** still fail closed with no outbound draft.
-4. **Structured extraction** — Each result includes `extraction` (`property_hint`, `unit`, `urgency`, `callback_number`, `requested_action`) from heuristics in `triage.extraction` (no invented street addresses). Extraction `urgency` feeds into `urgency_score` as above.
-5. **Response drafting** — `triage.drafting` builds **auto** replies with a generic acknowledgment, optional **verbatim** topic line when a subject word also appears in the body, and a **safety footer**. **Human review** routes get a holding message that **does not state account facts**, explains why a person must review, and may append “detected for staff” lines only when extraction found something.
-6. **Evaluation** — `triage.evaluate.evaluate_dataset` and `python -m triage.runner eval <path>` print per-row match info (including `urgency_score` and `priority_bucket`) and overall accuracy; **exit code 0** when all labeled rows match, **1** otherwise (useful for CI).
+- `0` when all labeled rows match
+- `1` when any labeled row mismatches
 
-**Tests:** `python -m pytest -q` (24 tests) including sample JSON gold routes, extraction, drafting, urgency buckets, eval, and CLI.
+### 2) AI mode (LangChain + Gemini)
 
-**Logging / validation:** `invalid_sender` is still logged with `message_id` when present. Triage is deterministic and uses only the message dict (no network).
+Run from repository root:
 
-**Next product ideas (3):** (1) Per-portfolio policy YAML to tune terms and human-review rules without code changes. (2) Two-person approval queue for `human_review` with SLA timers by `maintenance_emergency`. (3) Train a small classifier on labeled exports while keeping this rule engine as a safety baseline.
+```bash
+python -m triage_langchain data/sample_messages.json -o output/ai/langchain_output.json
+```
 
-**Authorship note for submission:** Core orchestration, scoring, extraction, drafting, evaluation, tests, and README updates were implemented for this task with AI assistance; the original trial skeleton lived in `core.py` / `runner.py` as provided.
+Optional helper script (Git Bash/WSL/macOS/Linux):
 
-## Evaluation Rubric
+```bash
+bash run_langchain.sh
+```
 
-We will score:
+This writes to `output/ai/langchain_output.json`.
 
-- Code-reading and restraint: works with the existing code instead of rewriting everything.
-- Product judgment: chooses a useful improvement for a real operations workflow.
-- Safety: avoids fabricated facts, protects sensitive cases, and makes human-review boundaries clear.
-- Tests: meaningful tests for normal cases and edge cases.
-- Observability: useful logging or evaluation output.
-- Communication: concise setup notes and clear tradeoffs.
-- AI-agent fluency: uses AI tools effectively but verifies the result.
+AI mode exits with:
 
-## What To Build
+- `0` success
+- `1` input parse/read error or agent-build failure (for example missing API key)
+- `2` CLI usage/argument error
 
-Pick one meaningful improvement. Examples:
+## Run tests
 
-- Improve classification accuracy and confidence scoring.
-- Add a safer human-review gate for legally sensitive, maintenance emergency, or money-related messages.
-- Add structured extraction, such as property, unit, urgency, callback number, and requested action.
-- Add a better response-drafting layer that never fabricates facts and explains why a human review is needed.
-- Add an evaluation/report command that shows classification accuracy on the sample dataset.
+Run full test suite:
+
+```bash
+python -m pytest -q
+```
+
+Tips:
+
+- For local-only development, `pip install -e ".[dev]"` is sufficient.
+- For LangChain-related tests, install `.[langchain]` (or `.[dev,langchain]`) so those tests do not get skipped.
+
+## Project entrypoints
+
+- Local runner: `src/triage/runner.py`
+- AI runner: `src/triage_langchain/__main__.py`
+- AI workflow + env loading: `src/triage_langchain/workflow.py`
+
+## Additional docs
+
+- Detailed AI mode guide: `langchain_readme.md`
 
