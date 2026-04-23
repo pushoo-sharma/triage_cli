@@ -12,4 +12,9 @@ src/triage/evaluate.py
 src/triage/extraction.py
 src/triage/models.py
 src/triage/runner.py
+src/triage/sa.py
+tests/test_drafting.py
+tests/test_evaluate.py
+tests/test_extraction.py
+tests/test_runner_cli.py
 tests/test_triage.py
