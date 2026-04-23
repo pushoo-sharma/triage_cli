@@ -1,0 +1,99 @@
+[
+    {
+      "category": "leasing_general",
+      "confidence": 0.48,
+      "expected": "auto_draft",
+      "id": "msg_001",
+      "route": "auto_draft",
+      "warnings": []
+    },
+    {
+      "category": "maintenance_emergency",
+      "confidence": 0.75,
+      "expected": "human_review",
+      "id": "msg_002",
+      "route": "human_review",
+      "warnings": [
+        "maintenance_emergency"
+      ]
+    },
+    {
+      "category": "fair_housing",
+      "confidence": 0.8,
+      "expected": "human_review",
+      "id": "msg_003",
+      "route": "human_review",
+      "warnings": [
+        "policy_review_required"
+      ]
+    },
+    {
+      "category": "money",
+      "confidence": 0.68,
+      "expected": "human_review",
+      "id": "msg_004",
+      "route": "human_review",
+      "warnings": [
+        "payment_review_required"
+      ]
+    },
+    {
+      "category": "leasing_general",
+      "confidence": 0.48,
+      "expected": "auto_draft",
+      "id": "msg_005",
+      "route": "auto_draft",
+      "warnings": []
+    },
+    {
+      "category": "legal",
+      "confidence": 0.72,
+      "expected": "human_review",
+      "id": "msg_006",
+      "route": "human_review",
+      "warnings": [
+        "legal_review_required"
+      ]
+    },
+    {
+      "category": "system",
+      "confidence": 0.82,
+      "expected": "skip",
+      "id": "msg_007",
+      "route": "skip",
+      "warnings": []
+    },
+    {
+      "category": "fair_housing",
+      "confidence": 0.6,
+      "expected": "human_review",
+      "id": "msg_008",
+      "route": "human_review",
+      "warnings": [
+        "policy_review_required"
+      ]
+    },
+    {
+      "category": "leasing_general",
+      "confidence": 0.48,
+      "expected": "auto_draft",
+      "id": "msg_009",
+      "route": "auto_draft",
+      "warnings": []
+    },
+    {
+      "category": "maintenance_emergency",
+      "confidence": 0.75,
+      "expected": "human_review",
+      "id": "msg_010",
+      "route": "human_review",
+      "warnings": [
+        "maintenance_emergency"
+      ]
+    },
+    {
+      "accuracy": 1,
+      "correct": 10,
+      "total": 10
+    }
+  ]

@@ -1,0 +1,10 @@
+{"id":"msg_001","sender":"prospect@example.com","subject":"2BR showing","body":"Hi, is the 2 bedroom apartment on Maple Street still available? I can tour tomorrow afternoon.","expected_route":"auto_draft"}
+{"id":"msg_002","sender":"tenant@example.com","subject":"Leak under sink","body":"There is water leaking under my kitchen sink and it is getting worse. Can someone come today?","expected_route":"human_review"}
+{"id":"msg_003","sender":"prospect@example.com","subject":"Voucher question","body":"Do you accept housing vouchers or Section 8? I want to apply if that is okay.","expected_route":"human_review"}
+{"id":"msg_004","sender":"vendor@example.com","subject":"Invoice follow up","body":"Following up on invoice 4021 for the lock repair. Can you confirm when payment will be sent?","expected_route":"human_review"}
+{"id":"msg_005","sender":"prospect@example.com","subject":"Thanks","body":"Thanks, I submitted the application and will wait for the next step.","expected_route":"auto_draft"}
+{"id":"msg_006","sender":"tenant@example.com","subject":"Attorney","body":"My attorney told me to put this in writing. I am going to sue if the mold is not handled immediately.","expected_route":"human_review"}
+{"id":"msg_007","sender":"noreply@example.com","subject":"Weekly activity summary","body":"System generated report for leasing activity.","expected_route":"skip"}
+{"id":"msg_008","sender":"prospect@example.com","subject":"Pet policy","body":"I have an emotional support animal. What documents do you need?","expected_route":"human_review"}
+{"id":"msg_009","sender":"prospect@example.com","subject":"Parking","body":"Is parking included with the apartment? Also, is there laundry in the building?","expected_route":"auto_draft"}
+{"id":"msg_010","sender":"tenant@example.com","subject":"No heat","body":"The heat has been off since last night and it is very cold in the unit.","expected_route":"human_review"}

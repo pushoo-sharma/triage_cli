@@ -23,10 +23,31 @@ def load_messages(path: Path) -> list[dict[str, Any]]:
 def _print_usage() -> None:
     print(
         "Usage:\n"
-        "  python -m triage.runner <path>              # run triage, print JSON per row\n"
+        "  python -m triage.runner <path> [-o out.json]   # triage: JSONL to stdout, or -o to write one JSON file\n"
         "  python -m triage.runner eval <path>         # report accuracy vs expected_route",
         file=sys.stderr,
     )
+
+
+def _parse_triage_path_and_output(argv: list[str]) -> tuple[Path | None, Path | None, str | None]:
+    """Parse a single message file path and optional -o / --output. Return (path, out, error)."""
+    out: Path | None = None
+    pos: list[str] = []
+    i = 0
+    while i < len(argv):
+        if argv[i] in ("-o", "--output"):
+            if i + 1 >= len(argv):
+                return None, None, "Missing path after -o / --output"
+            out = Path(argv[i + 1])
+            i += 2
+            continue
+        if argv[i].startswith("-"):
+            return None, None, f"Unknown option: {argv[i]!r}"
+        pos.append(argv[i])
+        i += 1
+    if len(pos) != 1:
+        return None, None, "Expected exactly one message file path"
+    return Path(pos[0]), out, None
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -71,9 +92,15 @@ def main(argv: list[str] | None = None) -> int:
         )
         return 0 if report.all_labeled_match else 1
 
-    path = Path(argv[0])
+    path, out_path, parse_err = _parse_triage_path_and_output(argv)
+    if parse_err is not None:
+        print(f"Error: {parse_err}", file=sys.stderr)
+        _print_usage()
+        return 2
+
     messages = load_messages(path)
 
+    results: list[dict[str, Any]] = []
     total = 0
     correct = 0
     labeled = 0
@@ -84,33 +111,39 @@ def main(argv: list[str] | None = None) -> int:
         if expected is not None:
             labeled += 1
             correct += int(expected == result.route)
-        print(
-            json.dumps(
-                {
-                    "id": message.get("id"),
-                    "expected": expected,
-                    "route": result.route,
-                    "category": result.category,
-                    "confidence": result.confidence,
-                    "review_triggers": result.review_triggers,
-                    "warnings": result.warnings,
-                },
-                sort_keys=True,
-            )
-        )
+        row = {
+            "id": message.get("id"),
+            "expected": expected,
+            "route": result.route,
+            "category": result.category,
+            "confidence": result.confidence,
+            "review_triggers": result.review_triggers,
+            "warnings": result.warnings,
+        }
+        results.append(row)
+        if out_path is None:
+            print(json.dumps(row, sort_keys=True))
 
     if total:
         acc = (correct / labeled) if labeled else 0.0
-        print(
-            json.dumps(
-                {
-                    "accuracy": acc,
-                    "correct": correct,
-                    "total": total,
-                    "labeled": labeled,
-                },
-                sort_keys=True,
-            )
+        summary: dict[str, Any] = {
+            "accuracy": acc,
+            "correct": correct,
+            "total": total,
+            "labeled": labeled,
+        }
+        if out_path is None:
+            print(json.dumps(summary, sort_keys=True))
+    else:
+        summary = None
+
+    if out_path is not None:
+        payload: dict[str, Any] = {"results": results}
+        if total:
+            assert summary is not None
+            payload["summary"] = summary
+        out_path.write_text(
+            json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8"
         )
     return 0
 

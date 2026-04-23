@@ -1,0 +1,99 @@
+[
+  {
+    "actual": "auto_draft",
+    "category": "leasing_general",
+    "confidence": 0.48,
+    "expected": "auto_draft",
+    "has_label": true,
+    "id": "msg_001",
+    "match": true
+  },
+  {
+    "actual": "human_review",
+    "category": "maintenance_emergency",
+    "confidence": 0.75,
+    "expected": "human_review",
+    "has_label": true,
+    "id": "msg_002",
+    "match": true
+  },
+  {
+    "actual": "human_review",
+    "category": "fair_housing",
+    "confidence": 0.8,
+    "expected": "human_review",
+    "has_label": true,
+    "id": "msg_003",
+    "match": true
+  },
+  {
+    "actual": "human_review",
+    "category": "money",
+    "confidence": 0.68,
+    "expected": "human_review",
+    "has_label": true,
+    "id": "msg_004",
+    "match": true
+  },
+  {
+    "actual": "auto_draft",
+    "category": "leasing_general",
+    "confidence": 0.48,
+    "expected": "auto_draft",
+    "has_label": true,
+    "id": "msg_005",
+    "match": true
+  },
+  {
+    "actual": "human_review",
+    "category": "legal",
+    "confidence": 0.72,
+    "expected": "human_review",
+    "has_label": true,
+    "id": "msg_006",
+    "match": true
+  },
+  {
+    "actual": "skip",
+    "category": "system",
+    "confidence": 0.82,
+    "expected": "skip",
+    "has_label": true,
+    "id": "msg_007",
+    "match": true
+  },
+  {
+    "actual": "human_review",
+    "category": "fair_housing",
+    "confidence": 0.6,
+    "expected": "human_review",
+    "has_label": true,
+    "id": "msg_008",
+    "match": true
+  },
+  {
+    "actual": "auto_draft",
+    "category": "leasing_general",
+    "confidence": 0.48,
+    "expected": "auto_draft",
+    "has_label": true,
+    "id": "msg_009",
+    "match": true
+  },
+  {
+    "actual": "human_review",
+    "category": "maintenance_emergency",
+    "confidence": 0.75,
+    "expected": "human_review",
+    "has_label": true,
+    "id": "msg_010",
+    "match": true
+  },
+  {
+    "accuracy": 1.0,
+    "all_labeled_match": true,
+    "correct": 10,
+    "labeled": 10,
+    "total_messages": 10
+  }
+]

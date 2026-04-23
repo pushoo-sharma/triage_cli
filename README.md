@@ -49,7 +49,7 @@ Do not build a giant system. A small, well-tested improvement with good judgment
 python3 -m venv .venv
 source .venv/bin/activate  # Windows: .venv\Scripts\activate
 pip install -e ".[dev]"
-pytest -q
+python -m pytest -q
 # Run triage on the sample set (JSON array or JSONL; both work)
 python -m triage.runner data/sample_messages.json
 # Report route accuracy vs. `expected_route` in the file (exit 1 if any labeled row mismatches)
@@ -64,7 +64,7 @@ python -m triage.runner eval data/sample_messages.json
 4. **Response drafting** — `triage.drafting` builds **auto** replies with a generic acknowledgment, optional **verbatim** topic line when a subject word also appears in the body, and a **safety footer**. **Human review** routes get a holding message that **does not state account facts**, explains why a person must review, and may append “detected for staff” lines only when extraction found something.
 5. **Evaluation** — `triage.evaluate.evaluate_dataset` and `python -m triage.runner eval <path>` print per-row match info and overall accuracy; **exit code 0** when all labeled rows match, **1** otherwise (useful for CI).
 
-**Tests:** `pytest -q` (20 tests) including sample JSON gold routes, extraction, drafting, eval, and CLI.
+**Tests:** `python -m pytest -q` (20 tests) including sample JSON gold routes, extraction, drafting, eval, and CLI.
 
 **Logging / validation:** `invalid_sender` is still logged with `message_id` when present. Triage is deterministic and uses only the message dict (no network).
 
