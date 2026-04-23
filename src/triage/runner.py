@@ -73,6 +73,8 @@ def main(argv: list[str] | None = None) -> int:
                         "match": row.match,
                         "category": row.category,
                         "confidence": row.confidence,
+                        "urgency_score": row.urgency_score,
+                        "priority_bucket": row.priority_bucket,
                         "has_label": row.has_label,
                     },
                     sort_keys=True,
@@ -117,6 +119,12 @@ def main(argv: list[str] | None = None) -> int:
             "route": result.route,
             "category": result.category,
             "confidence": result.confidence,
+            "urgency_score": result.urgency_score,
+            "priority_bucket": result.priority_bucket,
+            "reason": result.reason,
+            "human_review_reason": (
+                result.reason if result.route == "human_review" else None
+            ),
             "review_triggers": result.review_triggers,
             "warnings": result.warnings,
         }

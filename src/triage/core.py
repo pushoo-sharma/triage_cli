@@ -103,6 +103,39 @@ MONEY_TERMS = (
     "billed",
 )
 
+URGENCY_TIME_TERMS = (
+    "right now",
+    "asap",
+    "immediately",
+    "urgent",
+    "today",
+    "tonight",
+    "as soon as possible",
+)
+
+URGENCY_SEVERITY_TERMS = (
+    "flood",
+    "flooding",
+    "fire",
+    "smoke",
+    "gas leak",
+    "no heat",
+    "no hot water",
+    "no power",
+    "sparks",
+)
+
+URGENCY_VULNERABILITY_TERMS = (
+    "elderly",
+    "senior",
+    "child",
+    "children",
+    "disabled",
+    "disability",
+    "wheelchair",
+    "medical condition",
+)
+
 
 def triage_message(message: dict[str, Any]) -> TriageResult:
     """Classify one inbound message and optionally create a safe draft."""
@@ -116,10 +149,23 @@ def triage_message(message: dict[str, Any]) -> TriageResult:
 
     if not sender or "@" not in sender:
         logger.warning("invalid_sender", extra={"message_id": message.get("id")})
+        urgency_score, priority_bucket = _compute_urgency(
+            text=text,
+            category="invalid_input",
+            legal_hits=0,
+            fair_hits=0,
+            money_hits=0,
+            crisis=False,
+            regular=False,
+            maint_urgent=False,
+            extraction_urgency=extraction.urgency,
+        )
         r = TriageResult(
             route="human_review",
             category="invalid_input",
             confidence=0.96,
+            urgency_score=urgency_score,
+            priority_bucket=priority_bucket,
             reason="Sender is missing or invalid.",
             review_triggers=["invalid_sender"],
             warnings=["invalid_sender"],
@@ -129,6 +175,17 @@ def triage_message(message: dict[str, Any]) -> TriageResult:
         return r
 
     if any(s in subject.lower() for s in SYSTEM_SUBJECTS):
+        urgency_score, priority_bucket = _compute_urgency(
+            text=text,
+            category="system",
+            legal_hits=0,
+            fair_hits=0,
+            money_hits=0,
+            crisis=False,
+            regular=False,
+            maint_urgent=False,
+            extraction_urgency=extraction.urgency,
+        )
         return TriageResult(
             route="skip",
             category="system",
@@ -136,6 +193,8 @@ def triage_message(message: dict[str, Any]) -> TriageResult:
                 _conf_from_hits(1, 0.72),
                 2,
             ),
+            urgency_score=urgency_score,
+            priority_bucket=priority_bucket,
             reason="System notification does not need a response.",
             review_triggers=[],
             warnings=[],
@@ -155,11 +214,24 @@ def triage_message(message: dict[str, Any]) -> TriageResult:
         legal_hits, fair_hits, money_hits, maint_emerg, maint_any
     )
 
+    urgency_score, priority_bucket = _compute_urgency(
+        text=text,
+        category=category,
+        legal_hits=legal_hits,
+        fair_hits=fair_hits,
+        money_hits=money_hits,
+        crisis=crisis,
+        regular=regular,
+        maint_urgent=maint_urgent,
+        extraction_urgency=extraction.urgency,
+    )
     confidence = round(min(0.99, _conf_from_hits(n_hits, base_conf)), 2)
     r = TriageResult(
         route=_route_for_category(category),
         category=category,
         confidence=confidence,
+        urgency_score=urgency_score,
+        priority_bucket=priority_bucket,
         reason=reason,
         review_triggers=rtrig,
         warnings=_warnings_from_triggers(rtrig),
@@ -275,6 +347,66 @@ def _count_hits(text: str, terms: tuple[str, ...]) -> int:
 def _conf_from_hits(effective_hits: int, base: float) -> float:
     bump = 0.1 * min(effective_hits, 5) + 0.04 * max(0, effective_hits - 5)
     return min(0.99, base + bump)
+
+
+def _compute_urgency(
+    *,
+    text: str,
+    category: str,
+    legal_hits: int,
+    fair_hits: int,
+    money_hits: int,
+    crisis: bool,
+    regular: bool,
+    maint_urgent: bool,
+    extraction_urgency: str,
+) -> tuple[int, str]:
+    if category == "system":
+        return 0, "low"
+
+    score = 5
+    if category == "invalid_input":
+        score += 10
+
+    if crisis:
+        score += 45
+    if regular:
+        score += 20
+    if maint_urgent:
+        score += 20
+
+    score += min(20, legal_hits * 10)
+    score += min(15, fair_hits * 8)
+    score += min(10, money_hits * 4)
+
+    time_hits = _count_hits(text, URGENCY_TIME_TERMS)
+    severity_hits = _count_hits(text, URGENCY_SEVERITY_TERMS)
+    vulnerability_hits = _count_hits(text, URGENCY_VULNERABILITY_TERMS)
+
+    score += min(18, time_hits * 6)
+    score += min(35, severity_hits * 12)
+    score += min(20, vulnerability_hits * 10)
+
+    urgency_map = {
+        "emergency": 20,
+        "urgent": 12,
+        "normal": 4,
+        "unknown": 0,
+    }
+    score += urgency_map.get(extraction_urgency, 0)
+
+    bounded = max(0, min(100, score))
+    return bounded, _priority_bucket_for_score(bounded)
+
+
+def _priority_bucket_for_score(score: int) -> str:
+    if score >= 85:
+        return "critical"
+    if score >= 65:
+        return "high"
+    if score >= 35:
+        return "medium"
+    return "low"
 
 
 def _warnings_from_triggers(rtrig: list[str]) -> list[str]:

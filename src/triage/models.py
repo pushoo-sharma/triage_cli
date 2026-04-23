@@ -16,6 +16,8 @@ class TriageResult:
     route: str
     category: str
     confidence: float
+    urgency_score: int
+    priority_bucket: str
     reason: str
     draft: Draft | None = None
     warnings: list[str] = field(default_factory=list)
