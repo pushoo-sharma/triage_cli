@@ -1,3 +1,4 @@
+import json
 import subprocess
 import sys
 from pathlib import Path
@@ -40,3 +41,35 @@ def test_eval_subcommand_exit_one_on_mismatch():
         check=False,
     )
     assert r.returncode == 1
+
+
+def test_triage_writes_json_file_with_dash_o(tmp_path: Path):
+    out = tmp_path / "triage_out.json"
+    r = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "triage.runner",
+            str(REPO / "data" / "sample_messages.json"),
+            "-o",
+            str(out),
+        ],
+        cwd=str(REPO),
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert r.returncode == 0
+    assert r.stdout.strip() == ""
+    data = json.loads(out.read_text(encoding="utf-8"))
+    assert "results" in data and isinstance(data["results"], list)
+    assert len(data["results"]) > 0
+    first = data["results"][0]
+    assert "urgency_score" in first
+    assert isinstance(first["urgency_score"], int)
+    assert 0 <= first["urgency_score"] <= 100
+    assert "priority_bucket" in first
+    assert first["priority_bucket"] in {"low", "medium", "high", "critical"}
+    assert "summary" in data
+    assert "accuracy" in data["summary"]
+    assert 0.0 <= data["summary"]["accuracy"] <= 1.0

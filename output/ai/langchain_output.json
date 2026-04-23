@@ -1,0 +1,188 @@
+{
+  "results": [
+    {
+      "id": "msg_001",
+      "error": null,
+      "result": {
+        "route": "auto_draft",
+        "category": "leasing",
+        "confidence": 95,
+        "reason": "Standard leasing inquiry regarding apartment availability and tour scheduling.",
+        "review_recommended": false,
+        "review_triggers": []
+      },
+      "usage": {
+        "input_tokens": 181,
+        "output_tokens": 42,
+        "total_tokens": 223
+      }
+    },
+    {
+      "id": "msg_002",
+      "error": null,
+      "result": {
+        "route": "human_review",
+        "category": "maintenance",
+        "confidence": 100,
+        "reason": "The message reports a water leak which is a maintenance emergency requiring immediate staff intervention.",
+        "review_recommended": true,
+        "review_triggers": [
+          "maintenance_emergency"
+        ]
+      },
+      "usage": {
+        "input_tokens": 179,
+        "output_tokens": 80,
+        "total_tokens": 259
+      }
+    },
+    {
+      "id": "msg_003",
+      "error": null,
+      "result": {
+        "route": "human_review",
+        "category": "leasing",
+        "confidence": 100,
+        "reason": "Inquiries regarding fair housing and voucher acceptance require human oversight to ensure compliance with local regulations and policy.",
+        "review_recommended": true,
+        "review_triggers": [
+          "fair_housing"
+        ]
+      },
+      "usage": {
+        "input_tokens": 178,
+        "output_tokens": 84,
+        "total_tokens": 262
+      }
+    },
+    {
+      "id": "msg_004",
+      "error": null,
+      "result": {
+        "route": "human_review",
+        "category": "payment",
+        "confidence": 100,
+        "reason": "The message concerns an outstanding invoice payment, which constitutes a financial/payment dispute or inquiry that requires staff intervention.",
+        "review_recommended": true,
+        "review_triggers": [
+          "payment"
+        ]
+      },
+      "usage": {
+        "input_tokens": 183,
+        "output_tokens": 78,
+        "total_tokens": 261
+      }
+    },
+    {
+      "id": "msg_005",
+      "error": null,
+      "result": {
+        "route": "auto_draft",
+        "category": "leasing",
+        "confidence": 95,
+        "reason": "This is a routine follow-up confirming application submission; no action or specialized staff judgment is required.",
+        "review_recommended": false,
+        "review_triggers": []
+      },
+      "usage": {
+        "input_tokens": 172,
+        "output_tokens": 64,
+        "total_tokens": 236
+      }
+    },
+    {
+      "id": "msg_006",
+      "error": null,
+      "result": {
+        "route": "human_review",
+        "category": "legal",
+        "confidence": 100,
+        "reason": "The message mentions an attorney and a threat of litigation regarding a habitability issue.",
+        "review_recommended": true,
+        "review_triggers": [
+          "legal_threat",
+          "maintenance_issue"
+        ]
+      },
+      "usage": {
+        "input_tokens": 181,
+        "output_tokens": 87,
+        "total_tokens": 268
+      }
+    },
+    {
+      "id": "msg_007",
+      "error": null,
+      "result": {
+        "route": "auto_draft",
+        "category": "system_notification",
+        "confidence": 100,
+        "reason": "This is a system-generated report and not a tenant or lead inquiry.",
+        "review_recommended": false,
+        "review_triggers": []
+      },
+      "usage": {
+        "input_tokens": 168,
+        "output_tokens": 62,
+        "total_tokens": 230
+      }
+    },
+    {
+      "id": "msg_008",
+      "error": null,
+      "result": {
+        "route": "human_review",
+        "category": "legal",
+        "confidence": 100,
+        "reason": "Requests regarding emotional support animals involve fair housing compliance and require specific legal documentation handling.",
+        "review_recommended": true,
+        "review_triggers": [
+          "fair_housing",
+          "legal"
+        ]
+      },
+      "usage": {
+        "input_tokens": 172,
+        "output_tokens": 61,
+        "total_tokens": 233
+      }
+    },
+    {
+      "id": "msg_009",
+      "error": null,
+      "result": {
+        "route": "auto_draft",
+        "category": "leasing",
+        "confidence": 95,
+        "reason": "This is a standard, routine inquiry from a prospect regarding property amenities.",
+        "review_recommended": false,
+        "review_triggers": []
+      },
+      "usage": {
+        "input_tokens": 174,
+        "output_tokens": 67,
+        "total_tokens": 241
+      }
+    },
+    {
+      "id": "msg_010",
+      "error": null,
+      "result": {
+        "route": "human_review",
+        "category": "maintenance",
+        "confidence": 100,
+        "reason": "The report of a non-functional heater during cold weather constitutes a maintenance emergency.",
+        "review_recommended": true,
+        "review_triggers": [
+          "maintenance_emergency"
+        ]
+      },
+      "usage": {
+        "input_tokens": 176,
+        "output_tokens": 80,
+        "total_tokens": 256
+      }
+    }
+  ]
+}
