@@ -1,187 +1,276 @@
 {
   "results": [
     {
-      "id": "msg_001",
-      "error": null,
-      "result": {
-        "route": "auto_draft",
-        "category": "leasing",
-        "confidence": 95,
-        "reason": "Standard leasing inquiry regarding apartment availability and tour scheduling.",
-        "review_recommended": false,
-        "review_triggers": []
+      "input": {
+        "id": "msg_001",
+        "sender": "prospect@example.com",
+        "subject": "2BR showing",
+        "body": "Hi, is the 2 bedroom apartment on Maple Street still available? I can tour tomorrow afternoon.",
+        "expected_route": "auto_draft"
       },
-      "usage": {
-        "input_tokens": 181,
-        "output_tokens": 42,
-        "total_tokens": 223
+      "output": {
+        "id": "msg_001",
+        "error": null,
+        "result": {
+          "route": "auto_draft",
+          "category": "leasing",
+          "confidence": 95,
+          "reason": "Standard leasing inquiry regarding apartment availability and scheduling a tour.",
+          "review_recommended": false,
+          "review_triggers": []
+        },
+        "usage": {
+          "input_tokens": 181,
+          "output_tokens": 43,
+          "total_tokens": 224
+        }
       }
     },
     {
-      "id": "msg_002",
-      "error": null,
-      "result": {
-        "route": "human_review",
-        "category": "maintenance",
-        "confidence": 100,
-        "reason": "The message reports a water leak which is a maintenance emergency requiring immediate staff intervention.",
-        "review_recommended": true,
-        "review_triggers": [
-          "maintenance_emergency"
-        ]
+      "input": {
+        "id": "msg_002",
+        "sender": "tenant@example.com",
+        "subject": "Leak under sink",
+        "body": "There is water leaking under my kitchen sink and it is getting worse. Can someone come today?",
+        "expected_route": "human_review"
       },
-      "usage": {
-        "input_tokens": 179,
-        "output_tokens": 80,
-        "total_tokens": 259
+      "output": {
+        "id": "msg_002",
+        "error": null,
+        "result": {
+          "route": "human_review",
+          "category": "maintenance",
+          "confidence": 100,
+          "reason": "The message describes an active water leak, which constitutes a maintenance emergency requiring immediate staff intervention.",
+          "review_recommended": true,
+          "review_triggers": [
+            "maintenance_emergency"
+          ]
+        },
+        "usage": {
+          "input_tokens": 179,
+          "output_tokens": 82,
+          "total_tokens": 261
+        }
       }
     },
     {
-      "id": "msg_003",
-      "error": null,
-      "result": {
-        "route": "human_review",
-        "category": "leasing",
-        "confidence": 100,
-        "reason": "Inquiries regarding fair housing and voucher acceptance require human oversight to ensure compliance with local regulations and policy.",
-        "review_recommended": true,
-        "review_triggers": [
-          "fair_housing"
-        ]
+      "input": {
+        "id": "msg_003",
+        "sender": "prospect@example.com",
+        "subject": "Voucher question",
+        "body": "Do you accept housing vouchers or Section 8? I want to apply if that is okay.",
+        "expected_route": "human_review"
       },
-      "usage": {
-        "input_tokens": 178,
-        "output_tokens": 84,
-        "total_tokens": 262
+      "output": {
+        "id": "msg_003",
+        "error": null,
+        "result": {
+          "route": "human_review",
+          "category": "leasing",
+          "confidence": 100,
+          "reason": "Inquiries regarding fair housing and voucher acceptance require human oversight to ensure compliance with local regulations and internal policies.",
+          "review_recommended": true,
+          "review_triggers": [
+            "fair_housing"
+          ]
+        },
+        "usage": {
+          "input_tokens": 178,
+          "output_tokens": 85,
+          "total_tokens": 263
+        }
       }
     },
     {
-      "id": "msg_004",
-      "error": null,
-      "result": {
-        "route": "human_review",
-        "category": "payment",
-        "confidence": 100,
-        "reason": "The message concerns an outstanding invoice payment, which constitutes a financial/payment dispute or inquiry that requires staff intervention.",
-        "review_recommended": true,
-        "review_triggers": [
-          "payment"
-        ]
+      "input": {
+        "id": "msg_004",
+        "sender": "vendor@example.com",
+        "subject": "Invoice follow up",
+        "body": "Following up on invoice 4021 for the lock repair. Can you confirm when payment will be sent?",
+        "expected_route": "human_review"
       },
-      "usage": {
-        "input_tokens": 183,
-        "output_tokens": 78,
-        "total_tokens": 261
+      "output": {
+        "id": "msg_004",
+        "error": null,
+        "result": {
+          "route": "human_review",
+          "category": "payment",
+          "confidence": 100,
+          "reason": "This is a payment inquiry from a vendor, which requires staff confirmation of invoice status and payment processing.",
+          "review_recommended": true,
+          "review_triggers": [
+            "money_payment_dispute"
+          ]
+        },
+        "usage": {
+          "input_tokens": 183,
+          "output_tokens": 87,
+          "total_tokens": 270
+        }
       }
     },
     {
-      "id": "msg_005",
-      "error": null,
-      "result": {
-        "route": "auto_draft",
-        "category": "leasing",
-        "confidence": 95,
-        "reason": "This is a routine follow-up confirming application submission; no action or specialized staff judgment is required.",
-        "review_recommended": false,
-        "review_triggers": []
+      "input": {
+        "id": "msg_005",
+        "sender": "prospect@example.com",
+        "subject": "Thanks",
+        "body": "Thanks, I submitted the application and will wait for the next step.",
+        "expected_route": "auto_draft"
       },
-      "usage": {
-        "input_tokens": 172,
-        "output_tokens": 64,
-        "total_tokens": 236
+      "output": {
+        "id": "msg_005",
+        "error": null,
+        "result": {
+          "route": "auto_draft",
+          "category": "leasing",
+          "confidence": 95,
+          "reason": "The message is a routine follow-up confirming application submission and does not require manual intervention.",
+          "review_recommended": false,
+          "review_triggers": []
+        },
+        "usage": {
+          "input_tokens": 172,
+          "output_tokens": 57,
+          "total_tokens": 229
+        }
       }
     },
     {
-      "id": "msg_006",
-      "error": null,
-      "result": {
-        "route": "human_review",
-        "category": "legal",
-        "confidence": 100,
-        "reason": "The message mentions an attorney and a threat of litigation regarding a habitability issue.",
-        "review_recommended": true,
-        "review_triggers": [
-          "legal_threat",
-          "maintenance_issue"
-        ]
+      "input": {
+        "id": "msg_006",
+        "sender": "tenant@example.com",
+        "subject": "Attorney",
+        "body": "My attorney told me to put this in writing. I am going to sue if the mold is not handled immediately.",
+        "expected_route": "human_review"
       },
-      "usage": {
-        "input_tokens": 181,
-        "output_tokens": 87,
-        "total_tokens": 268
+      "output": {
+        "id": "msg_006",
+        "error": null,
+        "result": {
+          "route": "human_review",
+          "category": "legal",
+          "confidence": 100,
+          "reason": "The message explicitly mentions an attorney, legal action, and a habitability issue (mold) that could lead to litigation.",
+          "review_recommended": true,
+          "review_triggers": [
+            "legal_action",
+            "maintenance_emergency"
+          ]
+        },
+        "usage": {
+          "input_tokens": 181,
+          "output_tokens": 95,
+          "total_tokens": 276
+        }
       }
     },
     {
-      "id": "msg_007",
-      "error": null,
-      "result": {
-        "route": "auto_draft",
-        "category": "system_notification",
-        "confidence": 100,
-        "reason": "This is a system-generated report and not a tenant or lead inquiry.",
-        "review_recommended": false,
-        "review_triggers": []
+      "input": {
+        "id": "msg_007",
+        "sender": "noreply@example.com",
+        "subject": "Weekly activity summary",
+        "body": "System generated report for leasing activity.",
+        "expected_route": "skip"
       },
-      "usage": {
-        "input_tokens": 168,
-        "output_tokens": 62,
-        "total_tokens": 230
+      "output": {
+        "id": "msg_007",
+        "error": null,
+        "result": {
+          "route": "auto_draft",
+          "category": "system_report",
+          "confidence": 95,
+          "reason": "The message is an automated system report for internal property management and does not require a customer-facing response.",
+          "review_recommended": false,
+          "review_triggers": []
+        },
+        "usage": {
+          "input_tokens": 168,
+          "output_tokens": 67,
+          "total_tokens": 235
+        }
       }
     },
     {
-      "id": "msg_008",
-      "error": null,
-      "result": {
-        "route": "human_review",
-        "category": "legal",
-        "confidence": 100,
-        "reason": "Requests regarding emotional support animals involve fair housing compliance and require specific legal documentation handling.",
-        "review_recommended": true,
-        "review_triggers": [
-          "fair_housing",
-          "legal"
-        ]
+      "input": {
+        "id": "msg_008",
+        "sender": "prospect@example.com",
+        "subject": "Pet policy",
+        "body": "I have an emotional support animal. What documents do you need?",
+        "expected_route": "human_review"
       },
-      "usage": {
-        "input_tokens": 172,
-        "output_tokens": 61,
-        "total_tokens": 233
+      "output": {
+        "id": "msg_008",
+        "error": null,
+        "result": {
+          "route": "human_review",
+          "category": "leasing",
+          "confidence": 100,
+          "reason": "Inquiries regarding emotional support animals involve fair housing regulations and legal documentation requirements, which require human staff assessment.",
+          "review_recommended": true,
+          "review_triggers": [
+            "fair_housing"
+          ]
+        },
+        "usage": {
+          "input_tokens": 172,
+          "output_tokens": 85,
+          "total_tokens": 257
+        }
       }
     },
     {
-      "id": "msg_009",
-      "error": null,
-      "result": {
-        "route": "auto_draft",
-        "category": "leasing",
-        "confidence": 95,
-        "reason": "This is a standard, routine inquiry from a prospect regarding property amenities.",
-        "review_recommended": false,
-        "review_triggers": []
+      "input": {
+        "id": "msg_009",
+        "sender": "prospect@example.com",
+        "subject": "Parking",
+        "body": "Is parking included with the apartment? Also, is there laundry in the building?",
+        "expected_route": "auto_draft"
       },
-      "usage": {
-        "input_tokens": 174,
-        "output_tokens": 67,
-        "total_tokens": 241
+      "output": {
+        "id": "msg_009",
+        "error": null,
+        "result": {
+          "route": "auto_draft",
+          "category": "leasing",
+          "confidence": 95,
+          "reason": "This is a routine leasing inquiry regarding building amenities.",
+          "review_recommended": false,
+          "review_triggers": []
+        },
+        "usage": {
+          "input_tokens": 174,
+          "output_tokens": 63,
+          "total_tokens": 237
+        }
       }
     },
     {
-      "id": "msg_010",
-      "error": null,
-      "result": {
-        "route": "human_review",
-        "category": "maintenance",
-        "confidence": 100,
-        "reason": "The report of a non-functional heater during cold weather constitutes a maintenance emergency.",
-        "review_recommended": true,
-        "review_triggers": [
-          "maintenance_emergency"
-        ]
+      "input": {
+        "id": "msg_010",
+        "sender": "tenant@example.com",
+        "subject": "No heat",
+        "body": "The heat has been off since last night and it is very cold in the unit.",
+        "expected_route": "human_review"
       },
-      "usage": {
-        "input_tokens": 176,
-        "output_tokens": 80,
-        "total_tokens": 256
+      "output": {
+        "id": "msg_010",
+        "error": null,
+        "result": {
+          "route": "human_review",
+          "category": "maintenance",
+          "confidence": 100,
+          "reason": "The report of no heat in a unit during cold weather constitutes a maintenance emergency requiring immediate staff intervention.",
+          "review_recommended": true,
+          "review_triggers": [
+            "maintenance_emergency"
+          ]
+        },
+        "usage": {
+          "input_tokens": 176,
+          "output_tokens": 84,
+          "total_tokens": 260
+        }
       }
     }
   ]
